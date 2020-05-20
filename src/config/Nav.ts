@@ -28,7 +28,7 @@ const NavItems: NavMenu = [
     {
         id: 2,
         name: 'Login',
-        route: '/auth',
+        route: '/auth/login',
         require_auth: false, //hide if authed
         roles: Roles.UNAUTHENTICATED
     },

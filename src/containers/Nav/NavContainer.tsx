@@ -1,10 +1,9 @@
 import React from 'react';
-import { Roles } from '../../config/Roles';
 import { NavItems } from '../../config/Nav';
 import { AppBar, Toolbar, IconButton, Typography, Button } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import { NavLink } from 'react-router-dom';
-import { initialAuthState, AuthContext } from '../../context/AuthContext';
+import { AuthContext } from '../../context/Auth/AuthContext';
 
 import './NavContainer.scss';
 
@@ -24,7 +23,7 @@ const NavContainer = () => {
             {context => (
               <ul className="NavItems">
                 {NavItems.map((navItem) => {
-                  return ((context.role === navItem.roles && context.authenticated === navItem.require_auth) ? <li key={navItem.id}><NavLink to={navItem.route}><Button color="inherit">{navItem.name}</Button></NavLink></li> : null);
+                  return ((context.state.role === navItem.roles && context.state.authenticated === navItem.require_auth) ? <li key={navItem.id}><NavLink to={navItem.route}><Button color="inherit">{navItem.name}</Button></NavLink></li> : null);
                 })}
               </ul>
             )}
