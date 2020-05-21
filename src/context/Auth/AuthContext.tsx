@@ -4,7 +4,8 @@ import {Roles} from '../../config/Roles';
 
 const initialAuthState : any = {
     authenticated: false,
-    role: Roles.UNAUTHENTICATED
+    role: Roles.UNAUTHENTICATED,
+    registered: false
 }
 
 const AuthContext = React.createContext(initialAuthState);

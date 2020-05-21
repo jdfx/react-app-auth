@@ -1,8 +1,11 @@
 import React from 'react';
-import { TextField, Button, Card, CardContent, CardActions, Typography } from '@material-ui/core';
+import { Button, Card, CardContent, CardActions, Typography, LinearProgress, Box } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import { authAPI } from '../../api/auth.api';
 import { AuthContext } from '../../context/Auth/AuthContext';
+import { Formik, Form, Field } from 'formik';
+import * as Yup from 'yup';
+import { TextField } from 'formik-material-ui';
 
 import './Auth.scss';
 
@@ -11,110 +14,130 @@ const Register = () => {
     const { dispatch } = React.useContext(AuthContext);
 
     /**
-     * FORM STATE
+     * INITIAL FORM VALUES
      */
-    const [registerFormData, setRegisterFormData] = React.useState({
-        name_input: null,
-        email_input: null,
-        password_input: null,
-        confirm_password_input: null,
-        isSubmitting: false,
-        errorMessage: null
-    });
-
-    const handleRegisterFormInputChange = (event : any) => {
-        setRegisterFormData({
-            ...registerFormData,
-            [event.target.name] : event.target.value
-        });
+    const initialValues = {
+        name_input: '',
+        email_input: '',
+        password_input: '',
+        confirm_password_input: ''
     };
+
+    /**
+     * FORM VALIDATION
+     */
+    const formValidation = Yup.object().shape({
+        name_input: Yup.string()
+            .max(20, 'Must be 20 characters or less')
+            .min(3, 'Must be 3 characters or more')
+            .required('Required'),
+        email_input: Yup.string()
+            .email('Invalid email address')
+            .required('Required'),
+        password_input: Yup.string()
+            .min(8, 'Must be 8 characters or more')
+            .max(20, 'Must be 20 characters or less')
+            .required('Required'),
+        confirm_password_input: Yup.string().when("password_input", {
+            is: val => (val && val.length > 0 ? true : false),
+            then: Yup.string().oneOf(
+              [Yup.ref("password_input")],
+              "Both password need to be the same"
+            )
+            .required('Required')
+          })
+    });
 
     /**
      * FOR API SUBMIT
      */
     const authApi = new authAPI();
-    const handleRegisterFormSubmit = (event : any) => {
-
-        event.preventDefault();
-        setRegisterFormData({
-            ...registerFormData,
-            isSubmitting: true
-        });
+    const handleRegisterFormSubmit = (fields: any) => {
 
         authApi.register({
-            name: registerFormData.name_input,
-            email: registerFormData.email_input,
-            password: registerFormData.password_input,
-            c_password: registerFormData.confirm_password_input
-        }).then((authResponse : any) => {
+            name: fields.name_input,
+            email: fields.email_input,
+            password: fields.password_input,
+            c_password: fields.confirm_password_input
+        }).then((authResponse: any) => {
 
             dispatch({
-                type : 'REGISTER',
-                payload : authResponse.data.success
+                type: 'REGISTER',
+                payload: authResponse.data.success
             });
 
-            setRegisterFormData({
-                ...registerFormData,
-                isSubmitting: false
-            });
+        }).catch((error: any) => {
 
-        }).catch((error : any) => {
-
-            setRegisterFormData({
-                ...registerFormData,
-                errorMessage: error
-            });
+            //@todo - add a notify package
 
         });
     }
 
     return (
         <React.Fragment>
-        <Card className="centerCard authCard" variant="outlined">
-            <form onSubmit={handleRegisterFormSubmit}>
-                <CardContent>
-                <TextField
-                    id="name_input"
-                    name="name_input"
-                    label="Name"
-                    type="text"
-                    autoComplete="current-name"
-                    variant="outlined"
-                    onChange={handleRegisterFormInputChange}
-                    />
-                <TextField
-                    id="email_input"
-                    name="email_input"
-                    label="Email"
-                    type="email"
-                    autoComplete="current-email"
-                    variant="outlined"
-                    onChange={handleRegisterFormInputChange}
-                    />
-                <TextField
-                    id="password_input"
-                    name="password_input"
-                    label="Password"
-                    type="password"
-                    variant="outlined"
-                    onChange={handleRegisterFormInputChange}
-                    />
-                <TextField
-                    id="confirm_password_input"
-                    name="confirm_password_input"
-                    label="Confirm Password"
-                    type="password"
-                    variant="outlined"
-                    onChange={handleRegisterFormInputChange}
-                    />
-                </CardContent>
-                <CardActions>
-                    <Button size="small" type="submit">Register</Button>
-                    <Typography>already have an account? <Link to="/auth/login">login</Link></Typography>
-                </CardActions>
-            </form>
-        </Card>
-    </React.Fragment>
+            <AuthContext.Consumer>
+                {context => (
+                    <Card className="centerCard authCard" variant="outlined">
+                        {!context.state.registered ? <Box>
+                            <Formik
+                                initialValues={initialValues}
+                                validationSchema={formValidation}
+                                onSubmit={handleRegisterFormSubmit}
+                            >
+                                {({isSubmitting}) => (
+                                    <Form>
+                                        <CardContent>
+                                            <Field
+                                                id="name_input"
+                                                component={TextField}
+                                                name="name_input"
+                                                label="Name"
+                                                type="text"
+                                                autoComplete="current-name"
+                                                variant="outlined"
+                                            />
+                                            <Field
+                                                id="email_input"
+                                                component={TextField}
+                                                name="email_input"
+                                                label="Email"
+                                                type="email"
+                                                autoComplete="current-email"
+                                                variant="outlined"
+                                            />
+                                            <Field
+                                                id="password_input"
+                                                component={TextField}
+                                                name="password_input"
+                                                label="Password"
+                                                type="password"
+                                                variant="outlined"
+                                            />
+                                            <Field
+                                                id="confirm_password_input"
+                                                component={TextField}
+                                                name="confirm_password_input"
+                                                label="Confirm Password"
+                                                type="password"
+                                                variant="outlined"
+                                            />
+                                        </CardContent>
+                                        <CardActions>
+                                            {isSubmitting && <LinearProgress />}<br/>
+                                            <Button size="small" type="submit">Register</Button>
+                                            <Typography>already have an account? <Link to="/auth/login">login</Link></Typography>
+                                        </CardActions>
+                                    </Form>
+                                )}
+                            </Formik>
+                        </Box> :
+                        <Box>
+                            <Typography>Thank you, please check your email.</Typography>
+                        </Box> }
+                    </Card>
+                )}
+            </AuthContext.Consumer>
+        </React.Fragment>
     );
 };
 
