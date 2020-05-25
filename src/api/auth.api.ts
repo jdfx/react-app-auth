@@ -18,6 +18,13 @@ class authAPI {
                 throw new Error(err); // throw it
         });
     }
+
+    public login(parameters : {email : string|null; password: string|null;}){
+        return this.api.post('/auth/login', parameters).catch((err : any) => {
+                console.log(err); //log it
+                throw new Error(err); // throw it
+        });
+    }
 }
 
 export {

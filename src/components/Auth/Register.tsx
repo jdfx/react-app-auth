@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, Card, CardContent, CardActions, Typography, LinearProgress, Box } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import { authAPI } from '../../api/auth.api';
-import { AuthContext } from '../../context/Auth/AuthContext';
+import { authStoreContext } from '../../store/Auth/AuthStore';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import { TextField } from 'formik-material-ui';
@@ -11,12 +11,13 @@ import './Auth.scss';
 
 const Register = () => {
 
-    const { dispatch } = React.useContext(AuthContext);
+    const authStore = React.useContext(authStoreContext);
+    const { dispatch } = authStore;
 
     /**
      * INITIAL FORM VALUES
      */
-    const initialValues = {
+    const initialFormValues = {
         name_input: '',
         email_input: '',
         password_input: '',
@@ -63,7 +64,7 @@ const Register = () => {
 
             dispatch({
                 type: 'REGISTER',
-                payload: authResponse.data.success
+                payload: authResponse.data
             });
 
         }).catch((error: any) => {
@@ -75,12 +76,10 @@ const Register = () => {
 
     return (
         <React.Fragment>
-            <AuthContext.Consumer>
-                {context => (
                     <Card className="centerCard authCard" variant="outlined">
-                        {!context.state.registered ? <Box>
+                        {!authStore.registered ? <Box>
                             <Formik
-                                initialValues={initialValues}
+                                initialValues={initialFormValues}
                                 validationSchema={formValidation}
                                 onSubmit={handleRegisterFormSubmit}
                             >
@@ -135,8 +134,6 @@ const Register = () => {
                             <Typography>Thank you, please check your email.</Typography>
                         </Box> }
                     </Card>
-                )}
-            </AuthContext.Consumer>
         </React.Fragment>
     );
 };
