@@ -11,13 +11,8 @@ import './Auth.scss';
 
 const Login = () => {
 
-    const authStore = React.useContext(authStoreContext);
-    const { dispatch } = authStore;
-
-        // @todo you were here adding local for state to show the linear progress bar when login pressed
-        // then you need to test the login and role setting for admin
-        // then you need to do the redirects to relevant dashboards
-
+    let authStore = React.useContext(authStoreContext);
+    let { dispatch } = authStore;
 
     /**
      * INITIAL FORM VALUES
@@ -40,36 +35,35 @@ const Login = () => {
             .required('Required')
     });
 
-
     /**
-     * FOR API SUBMIT
+     * FORM API SUBMIT
      */
     const authApi = new authAPI();
-    let history = useHistory();
     const handleLoginFormSubmit = (fields: any) => {
 
-        authApi.login({
-            email: fields.email_input,
-            password: fields.password_input
-        }).then((authResponse: any) => {
+            authApi.login({
+                email: fields.email_input,
+                password: fields.password_input
+            }).then((authResponse: any) => {
 
-            dispatch({
-                type: 'LOGIN',
-                payload: authResponse.data
+                dispatch({
+                    type: 'LOGIN',
+                    payload: authResponse.data
+                });
+
+            }).catch((error: any) => {
+                console.log(error);
+                //@todo - add a notify package
             });
-            
-            switch(authStore.role){
-                case 0 : history.push('/admin/dash'); break;
-                case 1 : history.push('/user/dash'); break;
-                default: throw new Error('User has no role');
-            }
-
-        }).catch((error: any) => {
-            console.log('User has no role');
-            //@todo - add a notify package
-
-        });
     }
+
+    let history = useHistory();
+    React.useEffect(() => {
+        switch (authStore.state.role) {
+            case 0: history.push('/admin/dash'); break;
+            case 1: history.push('/user/dash'); break;
+        }
+    }, [authStore.state.role, history]);
 
     return (
         <React.Fragment>
@@ -78,8 +72,7 @@ const Login = () => {
                     <Formik
                         initialValues={initialFormValues}
                         validationSchema={formValidation}
-                        onSubmit={handleLoginFormSubmit}
-                    >
+                        onSubmit={handleLoginFormSubmit}>
                         {({ isSubmitting }) => (
                             !isSubmitting ? <Form>
                                 <CardContent>
@@ -107,12 +100,13 @@ const Login = () => {
                                     <Typography>don't have a login? <Link to="/auth/register">register</Link></Typography>
                                     <Typography>have you <Link to="/auth/reset">forgotten your password?</Link></Typography>
                                 </CardActions>
-                            </Form> 
-                            : 
-                            <Box> 
-                            <Typography>Logging in...</Typography>
-                            <br/>
-                            <LinearProgress /> </Box>
+                            </Form>
+                                :
+                            <Box>
+                                <Typography>Logging in...</Typography>
+                                <br />
+                                <LinearProgress /> 
+                            </Box>
                         )}
                     </Formik>
                 </Box>
