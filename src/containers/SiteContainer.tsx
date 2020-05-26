@@ -1,6 +1,6 @@
 import React from 'react';
 import NavContainer from './Nav/NavContainer';
-import SubscriberDashboardContainer from './Subscriber/DashContainer';
+import UserDashboardContainer from './User/DashContainer';
 import AdminDashboardContainer from './Admin/DashContainer';
 import AuthContainer from './Auth/AuthContainer';
 import { Container, Box } from '@material-ui/core';
@@ -8,9 +8,9 @@ import { authStoreContext } from '../store/Auth/AuthStore';
 import { Route, Switch } from 'react-router-dom';
 import { Roles } from '../config/Roles';
 
-function App() {
+function SiteContainer() {
 
-    const authStore = React.useContext(authStoreContext);
+    let authStore = React.useContext(authStoreContext);
 
     return (
         <Box className="App">
@@ -20,9 +20,9 @@ function App() {
             <Container maxWidth="xl">
                 <Box className="AppMain">
                     <Switch>
-                        {!authStore.authenticated ? <Route path="/auth" component={AuthContainer} /> : null}
-                        {(authStore.authenticated && authStore.role === Roles.USER) ? <Route path="/user/dash" component={SubscriberDashboardContainer} /> : null}
-                        {(authStore.authenticated && authStore.role === Roles.ADMIN) ? <Route path="/admin" component={AdminDashboardContainer} /> : null}
+                        <Route path="/auth" component={AuthContainer} />
+                        {(authStore.state.authenticated && authStore.state.role === Roles.USER) ? <Route path="/user/dash" component={UserDashboardContainer} /> : null}
+                        {(authStore.state.authenticated && authStore.state.role === Roles.ADMIN) ? <Route path="/admin/dash" component={AdminDashboardContainer} /> : null}
                     </Switch>
                 </Box>
             </Container>
@@ -30,6 +30,6 @@ function App() {
     );
 }
 
-export default App;
+export default SiteContainer;
 
 

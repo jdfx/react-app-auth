@@ -14,14 +14,14 @@ const NavItems: NavMenu = [
     {
         id: 0,
         name: 'Dashboard',
-        route: '/dash',
+        route: '/user/dash',
         require_auth: true, //show if authed
         roles: Roles.USER
     },
     {
         id: 1,
         name: 'Admin',
-        route: '/admin',
+        route: '/admin/dash',
         require_auth: true, //show if authed
         roles: Roles.ADMIN
     },

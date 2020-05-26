@@ -2,7 +2,7 @@ import React from 'react';
 
 import './DashContainer.scss';
 
-const SubscriberDashContainer = () => {
+const UserDashboardContainer = () => {
     return (
         <React.Fragment>
             <div>DashContainer</div>
@@ -10,4 +10,4 @@ const SubscriberDashContainer = () => {
     );
 };
 
-export default SubscriberDashContainer;
+export default UserDashboardContainer;

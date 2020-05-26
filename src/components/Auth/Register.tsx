@@ -68,9 +68,7 @@ const Register = () => {
             });
 
         }).catch((error: any) => {
-
             //@todo - add a notify package
-
         });
     }
 
@@ -81,8 +79,7 @@ const Register = () => {
                             <Formik
                                 initialValues={initialFormValues}
                                 validationSchema={formValidation}
-                                onSubmit={handleRegisterFormSubmit}
-                            >
+                                onSubmit={handleRegisterFormSubmit}>
                                 {({isSubmitting}) => (
                                     <Form>
                                         <CardContent>

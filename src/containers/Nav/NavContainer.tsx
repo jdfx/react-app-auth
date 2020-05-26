@@ -15,7 +15,7 @@ const NavContainer = () => {
     <React.Fragment>
       <AppBar position="fixed" className="NavContainer">
         <Toolbar>
-          <IconButton edge="start" className={'test'} color="inherit" aria-label="menu">
+          <IconButton edge="start" className={'menuIcon'} color="inherit" aria-label="menu">
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" className={'NavTitle'}>

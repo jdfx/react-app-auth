@@ -57,8 +57,12 @@ const Login = () => {
             });
     }
 
+    console.log('Component load:'+authStore.state.role);
     let history = useHistory();
     React.useEffect(() => {
+
+        console.log('Use efffect:'+authStore.state.role);
+
         switch (authStore.state.role) {
             case 0: history.push('/admin/dash'); break;
             case 1: history.push('/user/dash'); break;
