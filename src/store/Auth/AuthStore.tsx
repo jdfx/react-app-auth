@@ -1,15 +1,6 @@
 import React, {createContext, useReducer} from 'react';
 import {Roles} from '../../config/Roles';
 
-// type authStoreType = {
-//     state: {
-//         authenticated: boolean;
-//         role: Roles.ADMIN | Roles.USER | Roles.UNAUTHENTICATED;
-//         registered: boolean;
-//     };
-//     dispatch?: any
-// } problem with the way React.Provider ejects the store object and then useContext consumes it means we can't set a type for the store else typescript compiler complains - frustating, leaving this here incase find a way of fixing it
-
 const initialState : any = {
     authenticated: false,
     role: Roles.UNAUTHENTICATED,
@@ -18,7 +9,6 @@ const initialState : any = {
 
 const authStoreContext = createContext(initialState);
 const { Provider } = authStoreContext;
-
 
 const AuthStateProvider = (components:any) => {
 
@@ -30,7 +20,7 @@ const AuthStateProvider = (components:any) => {
                 registered: true
             }
             case 'LOGIN' : 
-            localStorage.setItem("token", JSON.stringify(action.payload.token));
+            if(action.payload.token) {localStorage.setItem("auth_token", action.payload.token);}
             return {
                 ...state,
                 authenticated: true,

@@ -5,12 +5,31 @@ import AdminDashboardContainer from './Admin/DashContainer';
 import AuthContainer from './Auth/AuthContainer';
 import { Container, Box } from '@material-ui/core';
 import { authStoreContext } from '../store/Auth/AuthStore';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Switch, useHistory } from 'react-router-dom';
 import { Roles } from '../config/Roles';
+import authAPI from '../api/auth.api';
 
 function SiteContainer() {
 
     let authStore = React.useContext(authStoreContext);
+    let { dispatch } = authStore; let authDispatch = dispatch;
+    let history = useHistory();
+
+    /**
+     * Check if user is already logged in on page load
+     */
+    React.useEffect(() => {
+        const authAPIinstance = new authAPI();
+        authAPIinstance.details().then(authCheck => {
+            authDispatch({
+                type: 'LOGIN',
+                payload: authCheck.data
+            });
+        }).catch(err => {
+            history.push('/auth/login');
+        });
+        // eslint-disable-next-line
+    }, []);
 
     return (
         <Box className="App">

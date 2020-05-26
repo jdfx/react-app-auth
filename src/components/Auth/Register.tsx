@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, Card, CardContent, CardActions, Typography, LinearProgress, Box } from '@material-ui/core';
-import { Link } from 'react-router-dom';
-import { authAPI } from '../../api/auth.api';
+import { Link, useHistory } from 'react-router-dom';
+import authAPI from '../../api/auth.api';
 import { authStoreContext } from '../../store/Auth/AuthStore';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
@@ -12,7 +12,8 @@ import './Auth.scss';
 const Register = () => {
 
     const authStore = React.useContext(authStoreContext);
-    const { dispatch } = authStore;
+    let { dispatch } = authStore; let authDispatch = dispatch;
+    let history = useHistory();
 
     /**
      * INITIAL FORM VALUES
@@ -62,10 +63,12 @@ const Register = () => {
             c_password: fields.confirm_password_input
         }).then((authResponse: any) => {
 
-            dispatch({
+            authDispatch({
                 type: 'REGISTER',
                 payload: authResponse.data
             });
+
+            history.push('/auth/login');
 
         }).catch((error: any) => {
             //@todo - add a notify package

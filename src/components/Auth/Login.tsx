@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, Card, CardContent, CardActions, Typography, Box, LinearProgress } from '@material-ui/core';
 import { Link, useHistory } from 'react-router-dom';
-import { authAPI } from '../../api/auth.api';
+import authAPI from '../../api/auth.api';
 import { authStoreContext } from '../../store/Auth/AuthStore';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
@@ -12,7 +12,7 @@ import './Auth.scss';
 const Login = () => {
 
     let authStore = React.useContext(authStoreContext);
-    let { dispatch } = authStore;
+    let { dispatch } = authStore; let authDispatch = dispatch;
 
     /**
      * INITIAL FORM VALUES
@@ -46,7 +46,7 @@ const Login = () => {
                 password: fields.password_input
             }).then((authResponse: any) => {
 
-                dispatch({
+                authDispatch({
                     type: 'LOGIN',
                     payload: authResponse.data
                 });
@@ -57,12 +57,8 @@ const Login = () => {
             });
     }
 
-    console.log('Component load:'+authStore.state.role);
     let history = useHistory();
     React.useEffect(() => {
-
-        console.log('Use efffect:'+authStore.state.role);
-
         switch (authStore.state.role) {
             case 0: history.push('/admin/dash'); break;
             case 1: history.push('/user/dash'); break;
