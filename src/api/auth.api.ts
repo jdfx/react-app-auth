@@ -21,4 +21,25 @@ export default class authAPI extends apiClient {
                 throw new Error(err); // throw it
         });
     }
+
+    public async passwordResetCreate(parameters : {email : string|null}){
+        return await this.api.post('/auth/password-reset/create', parameters).catch((err : any) => {
+                console.log(err); //log it
+                throw new Error(err); // throw it
+        });
+    }
+
+    public async passwordResetFind(parameters : {token : string|null;}){
+        return await this.api.post('/auth/password-reset/find', parameters).catch((err : any) => {
+                console.log(err); //log it
+                throw new Error(err); // throw it
+        });
+    }
+
+    public async passwordReset(parameters : {email : string|null; password: string|null; token: string|null;}){
+        return await this.api.post('/auth/password-reset/reset', parameters).catch((err : any) => {
+                console.log(err); //log it
+                throw new Error(err); // throw it
+        });
+    }
 }

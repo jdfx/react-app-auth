@@ -1,3 +1,9 @@
+# React SPA boilerplate
+
+This repo contains a useful starter for creating a react SPA. It contains registration, login and (empty) dashboard components. It is designed to be used with my other repo: https://github.com/jdfx/laravel-passport-o-auth alternativley you can clone https://github.com/jdfx/laravel-api-react-front-end-docker-template which pulls it all together into an easily deployable docker setup for both the front and back-end.
+
+Package is typescript and uses Material-UI with react hooks and the context api to manage state.
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
