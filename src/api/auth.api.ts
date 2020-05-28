@@ -22,7 +22,7 @@ export default class authAPI extends apiClient {
         });
     }
 
-    public async passwordResetCreate(parameters : {email : string|null}){
+    public async passwordResetRequest(parameters : {email : string|null; reset_url: string|undefined}){
         return await this.api.post('/auth/password-reset/create', parameters).catch((err : any) => {
                 console.log(err); //log it
                 throw new Error(err); // throw it
@@ -30,13 +30,13 @@ export default class authAPI extends apiClient {
     }
 
     public async passwordResetFind(parameters : {token : string|null;}){
-        return await this.api.post('/auth/password-reset/find', parameters).catch((err : any) => {
+        return await this.api.get(`/auth/password-reset/find/${parameters.token}`, ).catch((err : any) => {
                 console.log(err); //log it
                 throw new Error(err); // throw it
         });
     }
 
-    public async passwordReset(parameters : {email : string|null; password: string|null; token: string|null;}){
+    public async passwordReset(parameters : {email : string|null; password: string|null; password_confirmation : string|null; token: string|null;}){
         return await this.api.post('/auth/password-reset/reset', parameters).catch((err : any) => {
                 console.log(err); //log it
                 throw new Error(err); // throw it

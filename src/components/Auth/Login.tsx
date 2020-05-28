@@ -98,7 +98,7 @@ const Login = () => {
                                 <CardActions>
                                     <Button size="small" type="submit">Login</Button>
                                     <Typography>don't have a login? <Link to="/auth/register">register</Link></Typography>
-                                    <Typography>have you <Link to="/auth/reset">forgotten your password?</Link></Typography>
+                                    <Typography>have you <Link to="/auth/reset/request">forgotten your password?</Link></Typography>
                                 </CardActions>
                             </Form>
                                 :
